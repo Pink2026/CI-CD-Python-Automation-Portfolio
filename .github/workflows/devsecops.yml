@@ -32,8 +32,9 @@ jobs:
       # Step 3: Build the Docker Image
       # We point to the specific folder for this project
       - name: Build Docker Image
+      # important remark : here i had to write my github username manually , because when i first got it automatically using github.repository_owner , trivy detected it as a vulnerability and which caused a fail on github actions , this is due to the fact that the username starts with a capital letter "Pink2026"however docker registries such as GHCR only accept lower case letters
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/my-secure-app:latest ./project-2-devsecops-api
+          docker build -t ghcr.io/pink2026/my-secure-app:latest ./project-2-devsecops-api
 
       # Step 4: Login to GHCR
       # Uses the built-in GITHUB_TOKEN 
@@ -43,4 +44,4 @@ jobs:
       # Step 5: Push the final image to the registry
       # This makes the image available for Kubernetes to pull later
       - name: Push Image to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/my-secure-app:latest
+        run: docker push ghcr.io/pink2026/my-secure-app:latest
