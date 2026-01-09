@@ -47,7 +47,7 @@ Across all projects, the following principles were applied:
 - Architecture-aware technical decisions
 - Documentation-first mindset
 
-## 📈 Learning Objectives
+## Learning Objectives
 
 - Understand CI/CD pipelines beyond tool usage
 - Link automation decisions to architectural impact
