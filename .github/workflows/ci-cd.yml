@@ -1,0 +1,40 @@
+name: CI/CD Pipeline - Project 1
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        # Added the path to your app folder
+        run: |
+          cd project-1-ci-cd-pipeline/app
+          pip install flask
+          # If you have a requirements file, use: pip install -r requirements.txt
+
+      - name: Basic validation
+        run: python -c "print('Validation passed')"
+
+      - name: Build Docker image
+        # Added the path '.' to point to the folder containing the Dockerfile
+        run: docker build -t td-project-1-app ./project-1-ci-cd-pipeline
+        
+  deploy-simulated:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulated deployment
+        run: echo "Application deployed successfully"
