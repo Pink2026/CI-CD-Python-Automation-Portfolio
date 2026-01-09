@@ -1,0 +1,46 @@
+name: DevSecOps-Pipeline
+
+# Trigger the pipeline on every push to the main branch
+on:
+  push:
+    branches: [ "main" ]
+
+# Define permisions for the GIHUB_TOKEN to allow pushing to the Container Registry
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  security-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Download the code from the repo onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Scan the source code for secrets or vulnerabilities before building
+      # This is the "Security First" approach (Shift Left)
+      - name: Run Trivy Security Scan (Filesystem)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          # i will set exit-code to 0 so the build finishes even if bugs are found, however in a real environment i would set this to 1 to block insecure code! :)
+          exit-code: '0' 
+          severity: 'CRITICAL,HIGH'
+
+      # Step 3: Build the Docker Image
+      # We point to the specific folder for this project
+      - name: Build Docker Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/my-secure-app:latest ./project-2-devsecops-api
+
+      # Step 4: Login to GHCR
+      # Uses the built-in GITHUB_TOKEN 
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Step 5: Push the final image to the registry
+      # This makes the image available for Kubernetes to pull later
+      - name: Push Image to GHCR
+        run: docker push ghcr.io/${{ github.repository_owner }}/my-secure-app:latest
