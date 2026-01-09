@@ -15,4 +15,4 @@ jobs:
       # Running a static analysis of the YAML files
       - name: Run Kube-score Analysis
         run: |
-          docker run --rm -v $(pwd):/project zegl/kube-score:latest score project-3-k8s-gitops/manifests/*.yaml
+          docker run --rm -v $(pwd):/project zegl/kube-score:latest score project-3-k8s-gitops/manifest/*.yaml
