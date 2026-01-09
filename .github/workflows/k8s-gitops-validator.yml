@@ -1,0 +1,18 @@
+name: CloudScale-K8s-Validator
+
+on:
+  push:
+    paths:
+      - 'project-3-k8s-gitops/**'
+
+jobs:
+  validate-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # Running a static analysis of the YAML files
+      - name: Run Kube-score Analysis
+        run: |
+          docker run --rm -v $(pwd):/project zegl/kube-score:latest score project-3-k8s-gitops/manifests/*.yaml

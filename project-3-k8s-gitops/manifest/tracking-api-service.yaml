@@ -1,0 +1,14 @@
+# Service to expose the Tracking API to the internal network
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracking-api-service
+  namespace: logistics-prod
+spec:
+  selector:
+    app: tracking-api
+  ports:
+    - protocol: TCP
+      port: 80         # Internal Load Balancer Port
+      targetPort: 5000 # App Port
+  type: ClusterIP
